@@ -25,12 +25,24 @@ export class LinkedList {
     this.head = null;
     this.equalsFn = equalsFn;
   }
+  getHead() {
+    return this.head;
+  }
+
+  size() {
+    return this.count;
+  }
+
+  isEmpty() {
+    return this.size() < 1;
+  }
 
   push(val: TVal) {
     const currentNode = new Node(val);
     let current: TNode;
     if (!this.head) {
       this.head = new Node("", currentNode);
+      return 
     } else {
       current = this.head;
       while (current.next) {
@@ -41,35 +53,43 @@ export class LinkedList {
     this.count++;
   }
 
-  removeByIndex(index: number) {
-    if (index > this.count || !this.head) return;
+  removeByIndex(index: number): TNode {
+    let result: TNode = null;
+    if (index > this.count || !this.head) return result;
     let count = -1;
     let preNode: TNode = this.head;
     let current: TNode = this.head;
+   
     while (current) {
       if (count > index - 1) {
         preNode.next = current.next;
         this.count--;
+        result = result;
         break;
       }
       preNode = current;
       current = current.next;
       count++;
     }
+    return result;
   }
 
-  removeByVal(val: TVal) {
-    if (!this.head) return;
+  removeByVal(val: TVal): TNode {
+    let result: TNode = null;
+    if (!this.head) return result;
     let preNode: TNode = this.head;
     let current: TNode = this.head;
+
     while (current) {
       if (this.equalsFn(current.val, val)) {
         preNode.next = current.next;
+        result = current;
         this.count--;
       }
       preNode = current;
       current = current.next;
     }
+    return result;
   }
 
   removeAll() {
@@ -77,20 +97,42 @@ export class LinkedList {
     this.count = 0;
   }
 
-  insertByIndex(index: number, val: TVal) {
-    if (index > this.count || !this.head) return;
+  insertByIndex(index: number, val: TVal): number {
+    let result = -1;
+    if (index > this.count || !this.head) return result;
     let preNode: TNode = this.head;
     let current: TNode = this.head;
     let count = -1;
+
     while (current) {
       if (count > index - 1) {
         preNode.next = new Node(val, current.next);
         this.count++;
+        result = count;
         break;
       }
+      preNode = current;
+      current = current.next;
+      count++;
     }
-    preNode = current;
-    current = current.next;
-    count++;
+    return result;
+  }
+
+  indexOf(val: TVal) {
+    if (!this.head) return;
+    let count = -1;
+    let preNode: TNode = this.head;
+    let current: TNode = this.head;
+    let result = -1;
+    while (current) {
+      if (this.equalsFn(current.val, val)) {
+        result = count;
+        break;
+      }
+      preNode = current;
+      current = current.next;
+      count++;
+    }
+    return result;
   }
 }
